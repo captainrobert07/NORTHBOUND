@@ -64,3 +64,69 @@
 @media (min-width: 641px){
   .mobile-nav{display:none!important}
 }
+
+/* Reference direction: blue travel-dashboard glassmorphism. */
+:root{
+  --bg:#238bc6;
+  --surface:rgba(255,255,255,.16);
+  --surface2:rgba(255,255,255,.24);
+  --stroke:rgba(255,255,255,.28);
+  --text:#f7fcff;
+  --muted:rgba(239,249,255,.78);
+  --accent:#fff20a;
+  --accent2:#d7f2ff;
+  --gold:#fff6b0;
+  --danger:#ffd2d2;
+  --shadow:0 24px 70px rgba(8,49,87,.28);
+}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 18% 12%,rgba(255,255,255,.18),transparent 23rem),
+    radial-gradient(circle at 86% 72%,rgba(9,69,130,.30),transparent 28rem),
+    linear-gradient(145deg,#0b83c6 0%,#39a6dc 46%,#95c8e4 100%);
+}
+body:before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.18;
+  background-image:linear-gradient(135deg,transparent 0 48%,rgba(255,255,255,.2) 49% 50%,transparent 51% 100%);
+  background-size:28px 28px;
+}
+.shell{max-width:1280px}
+.nav{border-bottom-color:rgba(255,255,255,.18);background:rgba(20,130,190,.42);backdrop-filter:blur(20px)}
+.brand-logo{background:var(--accent);color:#083d62;box-shadow:0 8px 20px rgba(255,242,10,.25)}
+.brand span span,.eyebrow,.v2-eyebrow{color:var(--accent)}
+.navlinks button{color:rgba(255,255,255,.78)}
+.navlinks button.active,.navlinks button:hover{background:rgba(255,255,255,.20);color:#fff}
+.navhint{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.hero,.panel,.metric,.spot,.v2-card,.notice,.day-list,.schedule-block,.disclaimer,.check-row,.settle,.v2-item{
+  background:rgba(255,255,255,.15);
+  border-color:rgba(255,255,255,.25);
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(18px);
+}
+.hero{border-radius:32px;background:linear-gradient(115deg,rgba(13,94,151,.66),rgba(255,255,255,.10));}
+.hero-visual:before{background:linear-gradient(90deg,rgba(12,83,135,.92),rgba(12,83,135,.04) 68%)}
+.hero-desc,.page-header p,.section-top p,.spot-body p,.metric span,.v2-card p,.v2-muted,.v2-tiny,.disclaimer,.footer{color:var(--muted)}
+.btn{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.34);color:#fff;box-shadow:0 8px 20px rgba(6,60,105,.15)}
+.btn:hover{background:rgba(255,255,255,.27)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#0a486e}
+.pill{background:rgba(0,55,100,.38);color:#fff}
+.spot-img{background:rgba(0,63,112,.24)}
+.day-head,.v2-hero-mini{background:linear-gradient(120deg,rgba(11,88,145,.75),rgba(255,255,255,.12))}
+.field input,.field select,.field textarea,.v2-field input,.v2-field select,.v2-field textarea,.v2-field .v2-input{background:rgba(4,47,83,.38);border-color:rgba(255,255,255,.3);color:#fff}
+.seg{background:rgba(0,57,102,.3);border-color:rgba(255,255,255,.25)}
+.seg button{color:#fff}
+.seg button.active{background:var(--accent);color:#0a486e}
+.mobile-nav{background:rgba(232,248,255,.85);border-top-color:rgba(255,255,255,.5);box-shadow:0 -12px 32px rgba(0,66,112,.2)}
+.mobile-nav button{color:#146189}
+.mobile-nav button.active,.mobile-nav button:hover{background:var(--accent);color:#0a486e}
+.hero-stamp{background:rgba(7,65,104,.48);border-color:rgba(255,255,255,.3)}
+.notice{color:#fff4cf}
+.notice b{color:var(--accent)}
+
+@media (max-width:640px){
+  body{background:linear-gradient(160deg,#0d86c8 0%,#48addd 52%,#b2d9ea 100%)}
+  .hero{box-shadow:0 22px 50px rgba(6,67,115,.28)}
+  .metric strong{color:#fff}
+  .spot-body .sub{color:#f1fbff}
+}
