@@ -126,6 +126,13 @@ body:before{
 .hero-stamp{background:rgba(7,65,104,.48);border-color:rgba(255,255,255,.3)}
 .notice{color:#fff4cf}
 .notice b{color:var(--accent)}
+/* Keep inherited legacy metadata readable against the brighter glass background. */
+.muted,.v2-muted,.v2-tiny,.section-top p,.page-header p,.spot-body p,.metric span,.footer,.disclaimer,
+.dayfoot,.block-meta,.gps-state,.train-table th,.expense-table th,.v2-routetable th,.v2-routetable small,
+.field label,.v2-field label,.bar-head small,.stop-item small,.train-table small,.expense-table .muted,
+.v2-card p,.v2-card small,.v2-item small{color:rgba(247,252,255,.9)!important}
+input::placeholder,textarea::placeholder{color:rgba(247,252,255,.72)!important;opacity:1}
+code{color:#fff6a8}
 
 @media (max-width:640px){
   main{padding-bottom:24px}
