@@ -60,7 +60,7 @@ section.view{display:none;animation:in .27s ease}section.view.active{display:blo
  <nav class="navlinks" aria-label="Main navigation">
  <button class="active" data-view="overview">Overview</button><button data-view="itinerary">24h Planner</button><button data-view="mapview">Map & GPS</button><button data-view="expenses">Expenses</button><button data-view="splitter">Split bills</button><button data-view="essentials">Essentials</button><button data-view="studio">Trip Studio</button><button data-view="connections">Live Connections</button><button data-view="bookings">Bookings</button><button data-view="groupcloud">Shared Group</button><button data-view="coach">Trip Coach</button><button data-view="journal">Journal & Offline</button>
  </nav>
- <span class="navhint">14 JAN — 02 FEB 2027</span>
+ <span class="navhint">KRISTOM + ARYAN · 14 JAN — 02 FEB 2027</span>
 </header>
 <nav class="mobile-nav" aria-label="Quick navigation">
  <button class="active" data-view="overview"><span>⌂</span><small>Home</small></button>
@@ -74,7 +74,7 @@ section.view{display:none;animation:in .27s ease}section.view.active{display:blo
 <div class="hero"><div class="hero-copy">
  <span class="eyebrow">THE GREAT INDIA WINTER CIRCUIT</span>
  <h1>Twenty days.<br><em>One epic route.</em></h1>
- <p class="hero-desc">From the sacred sunrise of Varanasi to the Thar Desert, Kedarkantha's snowy summit and a ski lesson in Gulmarg. A train-first adventure built around your dates.</p>
+ <p class="hero-desc">From the sacred sunrise of Varanasi to the Thar Desert, Kedarkantha's snowy summit and a ski lesson in Gulmarg. A train-first adventure for Kristom and Aryan, built around your dates.</p>
  <div class="hero-actions"><button class="btn primary" data-go="itinerary">Explore day by day ↗</button><button class="btn" data-go="mapview">Open live map ◎</button></div>
  </div><div class="hero-visual"><img id="heroPhoto" alt="Snowy mountains in the Indian Himalayas" loading="eager"><div class="hero-stamp"><small>THE FIXED ADVENTURE</small><strong>23–27 JAN</strong>Kedarkantha Trek</div></div></div>
 <div class="metrics"><div class="metric"><strong>20 <span class="accent">days</span></strong><span>14 Jan → 02 Feb</span></div><div class="metric"><strong>14 <span class="accent">trains</span></strong><span>Planned rail legs · recheck</span></div><div class="metric"><strong>01 <span class="accent">room</span></strong><span>Heated Kashmir night; no dorms</span></div><div class="metric"><strong>₹<span id="overviewBudget">43,200</span></strong><span>Illustrative group budget, editable</span></div></div>
@@ -193,7 +193,9 @@ const fmtDate=s=>new Date(s+'T12:00:00+05:30').toLocaleDateString('en-IN',{day:'
 const K='northbound_v1_';
 function read(k,fallback){try{const s=localStorage.getItem(K+k);return s?JSON.parse(s):fallback}catch(e){return fallback}}
 function store(k,v){try{localStorage.setItem(K+k,JSON.stringify(v));window.dispatchEvent(new CustomEvent('nb:update',{detail:{key:k,value:v}}))}catch(e){toast('Storage unavailable: use a regular browser tab.')}}
-let members=read('members',['You','Friend 1']), expenses=read('expenses',[]), budgets=read('budgets',DATA.budgets), checks=read('checks',{}), selectedDay=0, mode='equal', returnVariant=read('return','direct'), map=null,miniMap=null,gpsWatch=null,gpsMarker=null,gpsCircle=null,lastCoords=null;
+let members=read('members',null);
+if(!Array.isArray(members)||!members.length||(members.length===2&&members[0]==='You'&&members[1]==='Friend 1')){members=['Kristom','Aryan'];store('members',members)}
+let expenses=read('expenses',[]), budgets=read('budgets',DATA.budgets), checks=read('checks',{}), selectedDay=0, mode='equal', returnVariant=read('return','direct'), map=null,miniMap=null,gpsWatch=null,gpsMarker=null,gpsCircle=null,lastCoords=null;
 const cats={ 'Rail tickets':['Sleeper class','3AC / 2AC','Chair car / Vande Bharat','Reservation fees','Other train'], 'Local transport':['Bus','Shared jeep','Taxi / cab','Auto / rickshaw','Metro','Other road'], 'Food & drinks':['Breakfast','Lunch','Dinner','Tea / snacks','Water'], 'Activities & tickets':['Monument entry','Boat ride','Desert safari','Gondola','Guide / instructor','Other activity'], 'Trek & skiing':['Kedarkantha package','Ski lesson','Ski gear','Trek equipment','Other adventure'], 'Accommodation':['Heated Kashmir room','Station retiring room','Other stay'], 'Shopping & gear':['Winter clothes','Souvenirs','Supplies','Electronics'], 'Other':['Emergency','Data / SIM','Medical / pharmacy','Miscellaneous']};
 const checklistItems=['16367 berth booked for 14 Jan (NCJ)','Confirm late-night arrival plan in Varanasi','Book Jan 18 Delhi → Jan 19 Jaipur sleeper','Verify Jan 21 Jaipur–Delhi station/timing','Confirm 23 Jan trek pickup location and time (before 09:00)','Confirm 27 Jan Dehradun return estimate with trek organizer','Book 22 Jan Nanda Devi AC berth','Book 27 Jan Nanda Devi AC berth or backup','Check Jammu Vande Bharat running day and availability','Prearrange Gulmarg road transfer and ski instructor','Reserve one heated Kashmir room','Book 31 Jan return train and create delay contingency','Carry government ID, IRCTC ID details and power bank','Pack proper thermals, waterproof boots, gloves and socks','Download offline Google Maps area and rail ticket PDFs','Keep emergency fund separate from daily spend'];
 function toast(t){const el=$('#toast');el.textContent=t;el.style.display='block';clearTimeout(el._t);el._t=setTimeout(()=>el.style.display='none',3100)}
