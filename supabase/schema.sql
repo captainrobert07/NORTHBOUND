@@ -31,6 +31,30 @@ create table if not exists public.trip_expenses (
  updated_at timestamptz not null default now(),
  primary key(group_id,id)
 );
+create table if not exists public.trip_journal_entries (
+ group_id uuid not null references public.trip_groups(id) on delete cascade,
+ id text not null check(char_length(id)<=150),
+ entry_date date not null,
+ title text not null check(char_length(title) between 1 and 160),
+ body text not null default '',
+ mood text not null default '🙂 Good' check(char_length(mood)<=60),
+ updated_by uuid references auth.users(id),
+ updated_at timestamptz not null default now(),
+ primary key(group_id,id)
+);
+create table if not exists public.trip_payments (
+ group_id uuid not null references public.trip_groups(id) on delete cascade,
+ id text not null check(char_length(id)<=150),
+ payment_date date not null,
+ paid_by text not null check(char_length(paid_by) between 1 and 80),
+ received_by text not null check(char_length(received_by) between 1 and 80),
+ amount numeric(12,2) not null check(amount>0),
+ method text not null default 'UPI' check(char_length(method)<=40),
+ updated_by uuid references auth.users(id),
+ updated_at timestamptz not null default now(),
+ primary key(group_id,id),
+ check(paid_by<>received_by)
+);
 create or replace function public.is_trip_member(p_group uuid) returns boolean
 language sql stable security definer set search_path=public as $$
  select auth.uid() is not null and exists(select 1 from public.trip_members m where m.group_id=p_group and m.user_id=auth.uid());
@@ -66,6 +90,8 @@ alter table public.trip_groups enable row level security;
 alter table public.trip_members enable row level security;
 alter table public.trip_documents enable row level security;
 alter table public.trip_expenses enable row level security;
+alter table public.trip_journal_entries enable row level security;
+alter table public.trip_payments enable row level security;
 drop policy if exists read_groups on public.trip_groups;
 create policy read_groups on public.trip_groups for select to authenticated using(public.is_trip_member(id));
 drop policy if exists read_members on public.trip_members;
@@ -86,6 +112,14 @@ drop policy if exists update_expenses on public.trip_expenses;
 create policy update_expenses on public.trip_expenses for update to authenticated using(public.is_trip_member(group_id)) with check(public.is_trip_member(group_id) and updated_by=auth.uid());
 drop policy if exists delete_expenses on public.trip_expenses;
 create policy delete_expenses on public.trip_expenses for delete to authenticated using(public.is_trip_member(group_id));
+drop policy if exists read_journal_entries on public.trip_journal_entries;
+create policy read_journal_entries on public.trip_journal_entries for select to authenticated using(public.is_trip_member(group_id));
+drop policy if exists write_journal_entries on public.trip_journal_entries;
+create policy write_journal_entries on public.trip_journal_entries for all to authenticated using(public.is_trip_member(group_id)) with check(public.is_trip_member(group_id) and updated_by=auth.uid());
+drop policy if exists read_payments on public.trip_payments;
+create policy read_payments on public.trip_payments for select to authenticated using(public.is_trip_member(group_id));
+drop policy if exists write_payments on public.trip_payments;
+create policy write_payments on public.trip_payments for all to authenticated using(public.is_trip_member(group_id)) with check(public.is_trip_member(group_id) and updated_by=auth.uid());
 -- Supabase Realtime: changes become visible to authenticated group members under RLS.
 do $$ begin
  if not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='trip_documents') then
@@ -93,6 +127,12 @@ do $$ begin
  end if;
  if not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='trip_expenses') then
    alter publication supabase_realtime add table public.trip_expenses;
+ end if;
+ if not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='trip_journal_entries') then
+   alter publication supabase_realtime add table public.trip_journal_entries;
+ end if;
+ if not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='trip_payments') then
+   alter publication supabase_realtime add table public.trip_payments;
  end if;
 end $$;
 -- Files are intentionally local-only. For cloud file sharing add a PRIVATE bucket and separate storage RLS policies after security review.
